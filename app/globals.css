@@ -2,32 +2,81 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-start-rgb: 214, 219, 220;
-  --background-end-rgb: 255, 255, 255;
-}
-
-@media (prefers-color-scheme: dark) {
+@layer base {
   :root {
-    --foreground-rgb: 255, 255, 255;
-    --background-start-rgb: 0, 0, 0;
-    --background-end-rgb: 0, 0, 0;
+    --background: 142.1 0% 95%;
+    --foreground: 142.1 0% 8%;
+    --card: 142.1 0% 90%;
+    --card-foreground: 142.1 0% 10%;
+    --popover: 142.1 0% 95%;
+    --popover-foreground: 142.1 95% 8%;
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 142.1 10% 70%;
+    --secondary-foreground: 0 0% 0%;
+    --muted: 104.1 10% 85%;
+    --muted-foreground: 142.1 0% 35%;
+    --accent: 104.1 10% 80%;
+    --accent-foreground: 142.1 0% 10%;
+    --destructive: 0 50% 30%;
+    --destructive-foreground: 142.1 0% 90%;
+    --border: 142.1 20% 50%;
+    --input: 142.1 20% 18%;
+    --ring: 142.1 76.2% 36.3%;
+    --radius: 0.75rem;
+  }
+  .dark {
+    --background: 142.1 10% 8%;
+    --foreground: 142.1 0% 90%;
+    --card: 142.1 0% 8%;
+    --card-foreground: 142.1 0% 90%;
+    --popover: 142.1 10% 5%;
+    --popover-foreground: 142.1 0% 90%;
+    --primary: 142.1 76.2% 36.3%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 142.1 10% 10%;
+    --secondary-foreground: 0 0% 100%;
+    --muted: 104.1 10% 15%;
+    --muted-foreground: 142.1 0% 60%;
+    --accent: 104.1 10% 15%;
+    --accent-foreground: 142.1 0% 90%;
+    --destructive: 0 50% 30%;
+    --destructive-foreground: 142.1 0% 90%;
+    --border: 142.1 20% 18%;
+    --input: 142.1 20% 18%;
+    --ring: 142.1 76.2% 36.3%;
+    --radius: 0.75rem;
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
+/* --background: #121614;
+--foreground: #e6e6e6;
+--card: #141414;
+--card-foreground: #e6e6e6;
+--popover: #0b0e0c;
+--popover-foreground: #e6e6e6;
+--primary: #16a34a;
+--primary-foreground: #ffffff;
+--secondary: #171c19;
+--secondary-foreground: #ffffff;
+--muted: #242a22;
+--muted-foreground: #999999;
+--accent: #242a22;
+--accent-foreground: #e6e6e6;
+--destructive: #732626;
+--destructive-foreground: #e6e6e6;
+--border: #25372b;
+--input: #25372b;
+--ring: #16a34a;
+--radius: 0.75rem; */
 
-@layer utilities {
-  .text-balance {
-    text-wrap: balance;
+/* dark mode to hex - I needed the colors for figma */
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+  body {
+    @apply bg-background text-foreground;
   }
 }
