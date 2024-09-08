@@ -1,8 +1,9 @@
-"use server";
-
-export async function getUserData(accessToken: string | null | undefined) {
+async function fetchData(
+  url: string,
+  accessToken: string | null | undefined,
+): Promise<any> {
   try {
-    const response = await fetch("https://api.spotify.com/v1/me", {
+    const response = await fetch(url, {
       method: "GET",
       headers: {
         Authorization: `Bearer ${accessToken}`,
@@ -21,28 +22,15 @@ export async function getUserData(accessToken: string | null | undefined) {
   }
 }
 
+export async function getUserData(accessToken: string | null | undefined) {
+  const url = "https://api.spotify.com/v1/me";
+  return await fetchData(url, accessToken);
+}
+
 export async function getUserPlaylists(accessToken: string | null | undefined) {
   const userData = await getUserData(accessToken);
-  // I could in fact store the userId somewhere else so I don't need to fetch this everytime, but I'm lazy.
-  try {
-    const response = await fetch(
-      `https://api.spotify.com/v1/users/${userData.id}/playlists?limit=50`,
-      {
-        method: "GET",
-        headers: {
-          Authorization: `Bearer ${accessToken}`,
-        },
-      },
-    );
+  if (!userData) return null;
 
-    if (!response.ok) {
-      throw new Error(`HTTP error! Status: ${response.status}`);
-    }
-
-    const data = await response.json();
-    return data;
-  } catch (error) {
-    console.error("Error:", error);
-    return null;
-  }
+  const url = `https://api.spotify.com/v1/users/${userData.id}/playlists?limit=50`;
+  return await fetchData(url, accessToken);
 }

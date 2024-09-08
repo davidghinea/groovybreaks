@@ -3,16 +3,21 @@
 import React from "react";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import Dashboard from "../_components/Dashboard";
+import { Dashboard } from "../_components/Dashboard";
 
 import Link from "next/link";
 
-const page = async () => {
+const page = async ({
+  searchParams,
+}: {
+  searchParams: { [key: string]: string | string[] | undefined };
+}) => {
+  console.log(searchParams.id);
   const session = await getServerSession(options);
   // gets a modified session object which includes the accessToken => see the modification in ./api/auth/[...nextauth]/options.ts
 
   return session?.user ? (
-    <Dashboard session={session} />
+    <Dashboard session={session} searchParams={searchParams} />
   ) : (
     <h1>
       You are not authentified{" "}

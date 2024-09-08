@@ -21,5 +21,6 @@ function HomeHeader() {
     </div>
   );
 }
+// needs resizing for mobile
 
 export default HomeHeader;
