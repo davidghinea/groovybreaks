@@ -7,7 +7,7 @@ import { ArrowRight } from "lucide-react";
 import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 
-const HomePage = async () => {
+export default async function HomePage(): Promise<JSX.Element> {
   const session = await getServerSession(options);
   return (
     <div className="flex h-[100dvh] w-[100dvw] flex-col items-center justify-center md:flex-row">
@@ -34,6 +34,4 @@ const HomePage = async () => {
       </main>
     </div>
   );
-};
-
-export default HomePage;
+}

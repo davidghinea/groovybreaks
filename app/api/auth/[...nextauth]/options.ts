@@ -30,13 +30,13 @@ export const options: NextAuthOptions = {
   callbacks: {
     async jwt({ token, account }) {
       // Store the access token in the JWT token if available
-      if (account && account.access_token) {
+      if (account && typeof account.access_token === "string") {
         token.accessToken = account.access_token;
       }
       return token;
     },
     async session({ token, session }) {
-      if (session.user) {
+      if (session?.user && typeof token.accessToken === "string") {
         session.user.accessToken = token.accessToken as string;
       }
       return session;

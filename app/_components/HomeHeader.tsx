@@ -3,7 +3,7 @@ import Logo from "@/public/transparentlogo.svg";
 import Image from "next/image";
 import Link from "next/link";
 
-function HomeHeader() {
+export default function HomeHeader(): JSX.Element {
   return (
     <div className="absolute mb-8 mt-8 flex w-full justify-center overflow-hidden">
       <header className="flex w-[814px] items-center justify-between">
@@ -22,5 +22,3 @@ function HomeHeader() {
   );
 }
 // needs resizing for mobile
-
-export default HomeHeader;

@@ -3,18 +3,18 @@
 import React from "react";
 import { options } from "@/app/api/auth/[...nextauth]/options";
 import { getServerSession } from "next-auth";
-import { Dashboard } from "../_components/Dashboard";
+import Dashboard from "../_components/Dashboard";
+import { SearchParamsType } from "@/lib/types";
 
 import Link from "next/link";
 
-const page = async ({
+export default async function page({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
-}) => {
-  console.log(searchParams.id);
+  searchParams: SearchParamsType;
+}): Promise<JSX.Element> {
   const session = await getServerSession(options);
-  // gets a modified session object which includes the accessToken => see the modification in ./api/auth/[...nextauth]/options.ts
+  // gets a modified session object which includes the accessToken => see the modification in ../api/auth/[...nextauth]/options.ts
 
   return session?.user ? (
     <Dashboard session={session} searchParams={searchParams} />
@@ -28,6 +28,4 @@ const page = async ({
     </h1>
     // This page needs to be styled soon.
   );
-};
-
-export default page;
+}

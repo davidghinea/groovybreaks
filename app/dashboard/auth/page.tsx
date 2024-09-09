@@ -1,7 +1,7 @@
 import { redirect } from "next/navigation";
 import { revalidatePath } from "next/cache";
 
-export default function RedirectProtected() {
+export default function RedirectProtected(): void {
   revalidatePath("/dashboard");
   redirect(`/dashboard`);
 }

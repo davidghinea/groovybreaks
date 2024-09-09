@@ -21,14 +21,13 @@ import { useRouter } from "next/navigation";
 import { usePathname } from "next/navigation";
 import { useSearchParams } from "next/navigation";
 import { useCallback } from "react";
+import { playlistDataType } from "@/lib/types";
 import Image from "next/image";
-
-type PlaylistType = { name: string; id: string; image: string };
 
 export default function Combobox({
   playlistData,
 }: {
-  playlistData: PlaylistType[];
+  playlistData: playlistDataType[];
 }) {
   // gets passed this fetched playlist data to populate the combobox
   // we don't fetch the data here directly since this is a client component
@@ -59,8 +58,9 @@ export default function Combobox({
           className="h-[76px] w-[350px] justify-between md:w-[600px]"
         >
           {id
-            ? playlistData.find((playlist: PlaylistType) => playlist.id === id)
-                ?.name
+            ? playlistData.find(
+                (playlist: playlistDataType) => playlist.id === id,
+              )?.name
             : "Select playlist..."}
           <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
         </Button>
@@ -71,7 +71,7 @@ export default function Combobox({
           <CommandList>
             <CommandEmpty>No playlist found.</CommandEmpty>
             <CommandGroup>
-              {playlistData.map((playlist: PlaylistType) => (
+              {playlistData.map((playlist: playlistDataType) => (
                 <CommandItem
                   key={playlist.id}
                   className="text-lg md:text-base"
