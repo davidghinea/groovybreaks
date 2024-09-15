@@ -3,6 +3,7 @@ import {
   UserDataType,
   UserPlaylistsType,
   ApiError,
+  PlaylistItemsType,
 } from "@/lib/types";
 
 async function fetchData<T>(
@@ -25,19 +26,19 @@ async function fetchData<T>(
           message: errorResponse.error.message,
         };
         throw new Error(
-          `API Error: Status ${apiError.status}, Message: ${apiError.message}`,
+          `Status ${apiError.status}, Message: ${apiError.message}`,
         );
       } else {
-        throw new Error(`Unknown API error. Status: ${response.status}`);
+        throw new Error(`Unknown error. Status: ${response.status}`);
       }
     }
 
     const data: T = await response.json(); // Enforces type
     return data;
   } catch (error) {
-    console.error("Error:", error);
+    console.error(error);
     throw new Error(
-      `Fetch Error: ${error instanceof Error ? error.message : "Unknown error"}`,
+      `${error instanceof Error ? error.message : "Unknown error"}`,
     );
   }
 }
@@ -62,6 +63,15 @@ export async function getUserPlaylists(
 
   const url = `https://api.spotify.com/v1/users/${userData.id}/playlists?limit=50`;
   return await fetchData<UserPlaylistsType>(url, accessToken);
+}
+
+export async function getPlaylistById(
+  accessToken: accessTokenType,
+  playlistId: string,
+): Promise<PlaylistItemsType | ApiError> {
+  const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=5`;
+  // await new Promise((resolve) => setTimeout(resolve, 2000)); - to check suspense (not implemented yet)
+  return await fetchData<PlaylistItemsType>(url, accessToken);
 }
 
 // i recommend checking out "@/lib/types.tsx" to understand what each function returns

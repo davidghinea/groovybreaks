@@ -7,6 +7,7 @@ import { Session } from "next-auth";
 import Combobox from "./PlaylistCombobox";
 import { SearchParamsType } from "@/lib/types";
 import { playlistDataType, UserPlaylistType } from "@/lib/types";
+import Playlist from "./Playlist";
 
 export default async function Dashboard({
   session,
@@ -23,7 +24,7 @@ export default async function Dashboard({
     throw new Error(`Failed to fetch playlists: ${fetchPlaylists.message}`);
   }
 
-  const selectedPlaylistId = searchParams?.id; // gets the id of the selected playlist from the combobox using the search params
+  const selectedPlaylistId = searchParams?.id ?? null; // gets the id of the selected playlist from the combobox using the search params
 
   const playlistData: playlistDataType[] = [];
   fetchPlaylists.items.forEach((playlist: UserPlaylistType) => {
@@ -37,9 +38,17 @@ export default async function Dashboard({
   return (
     <div className="relative top-[200px] flex w-full flex-col items-center justify-center">
       <Combobox playlistData={playlistData} />
-      <h1 className="mt-8 max-w-[350px] text-center text-2xl font-normal md:max-w-[425px] md:text-4xl">
+      {/* <h1 className="mt-8 max-w-[350px] text-center text-2xl font-normal md:max-w-[425px] md:text-4xl">
         {selectedPlaylistId}
-      </h1>
+      </h1> */}
+      {selectedPlaylistId &&
+      accessToken &&
+      typeof accessToken === "string" &&
+      typeof selectedPlaylistId === "string" ? (
+        <Playlist playlistId={selectedPlaylistId} accessToken={accessToken} />
+      ) : (
+        <h1 className="mt-4">Select a playlist</h1>
+      )}
     </div>
   );
 }

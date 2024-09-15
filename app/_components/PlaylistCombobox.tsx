@@ -55,7 +55,7 @@ export default function Combobox({
           variant="outline"
           role="combobox"
           aria-expanded={open}
-          className="h-[76px] w-[350px] justify-between md:w-[600px]"
+          className="h-[56px] w-[350px] justify-between md:w-[600px]"
         >
           {id
             ? playlistData.find(
@@ -84,7 +84,7 @@ export default function Combobox({
                         createQueryString("id", `${playlist.id}`),
                     );
                     // push the playlist id into the search parameters so we can access that value in the server-side parent
-                    router.refresh();
+
                     // revalidate the path so the selection is updated in the server-side parent
                   }}
                 >
