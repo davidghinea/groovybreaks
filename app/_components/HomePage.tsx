@@ -1,6 +1,7 @@
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import creativeImage from "@/public/why ilustration.svg";
+import creativeImage from "@/public/illustrations/whyIllustration.svg";
+
 import Link from "next/link";
 import { ArrowRight } from "lucide-react";
 
@@ -15,7 +16,8 @@ export default async function HomePage(): Promise<JSX.Element> {
         src={creativeImage}
         alt="creative"
         className="mb-8 w-[250px] md:mb-0 md:mr-16"
-      ></Image>{" "}
+      />
+
       <main className="flex flex-col items-center md:items-start">
         <h1 className="mb-4 max-w-[400px] text-center text-4xl font-semibold md:max-w-[500px] md:text-left md:text-5xl md:font-bold">
           Connect Through Music and enhance your{" "}

@@ -6,7 +6,7 @@ import { getServerSession } from "next-auth";
 import Dashboard from "../_components/Dashboard";
 import { SearchParamsType } from "@/lib/types";
 
-import Link from "next/link";
+import NotAuth from "../_components/NotAuth";
 
 export default async function page({
   searchParams,
@@ -19,13 +19,6 @@ export default async function page({
   return session?.user ? (
     <Dashboard session={session} searchParams={searchParams} />
   ) : (
-    <h1>
-      You are not authentified{" "}
-      <Link href="dashboard/auth" className="block underline">
-        {" "}
-        Click here.
-      </Link>
-    </h1>
-    // This page needs to be styled soon.
+    <NotAuth />
   );
 }

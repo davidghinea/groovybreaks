@@ -38,9 +38,6 @@ export default async function Dashboard({
   return (
     <div className="relative top-[200px] flex w-full flex-col items-center justify-center">
       <Combobox playlistData={playlistData} />
-      {/* <h1 className="mt-8 max-w-[350px] text-center text-2xl font-normal md:max-w-[425px] md:text-4xl">
-        {selectedPlaylistId}
-      </h1> */}
       {selectedPlaylistId &&
       accessToken &&
       typeof accessToken === "string" &&
