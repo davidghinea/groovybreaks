@@ -13,7 +13,7 @@ export default function NotAuth() {
       />
       <div className="flex flex-col">
         <h1 className="mb-3 max-w-[400px] text-center text-2xl font-medium md:max-w-[500px] md:text-left md:text-4xl">
-          Please Log-In to view this page.
+          Please <span className="text-primary">Log In</span> to view this page.
         </h1>
         <Link
           href="dashboard/auth"
