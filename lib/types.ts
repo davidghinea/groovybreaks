@@ -204,7 +204,7 @@ export type PlaylistItemsType = {
       type: string;
       uri: string;
       is_local: boolean;
-    };
+    } | null;
   }>;
 };
 
