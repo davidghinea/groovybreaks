@@ -9,7 +9,7 @@ import {
 async function fetchData<T>(
   url: string,
   accessToken: accessTokenType,
-): Promise<T | ApiError> {
+): Promise<T> {
   try {
     const response = await fetch(url, {
       method: "GET",
@@ -21,25 +21,22 @@ async function fetchData<T>(
     if (!response.ok) {
       const errorResponse = await response.json();
       if (errorResponse.error) {
-        const apiError: ApiError = {
-          status: errorResponse.error.status,
-          message: errorResponse.error.message,
-        };
-        throw new Error(
-          `Status ${apiError.status}, Message: ${apiError.message}`,
+        throw new ApiError(
+          errorResponse.error.status,
+          errorResponse.error.message,
         );
       } else {
-        throw new Error(`Unknown error. Status: ${response.status}`);
+        throw new ApiError(response.status, `An unexpected error occurred.`);
       }
     }
 
-    const data: T = await response.json(); // Enforces type
+    const data: T = await response.json();
     return data;
   } catch (error) {
-    console.error(error);
-    throw new Error(
-      `${error instanceof Error ? error.message : "Unknown error"}`,
-    );
+    if (error instanceof ApiError) {
+      throw error; // Re-throw ApiError as is
+    }
+    throw new ApiError(500, "An unexpected error occurred");
   }
 }
 // generic function that can be used to fetch most of the endpoints in spotify api
@@ -48,30 +45,29 @@ async function fetchData<T>(
 
 export async function getUserData(
   accessToken: accessTokenType,
-): Promise<UserDataType | ApiError> {
+): Promise<UserDataType> {
   const url = "https://api.spotify.com/v1/me";
   return await fetchData<UserDataType>(url, accessToken);
 }
+// https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
 
 export async function getUserPlaylists(
   accessToken: accessTokenType,
-): Promise<UserPlaylistsType | ApiError> {
+): Promise<UserPlaylistsType> {
   const userData = await getUserData(accessToken);
-  if (!userData || "status" in userData) {
-    return userData;
-  }
-
   const url = `https://api.spotify.com/v1/users/${userData.id}/playlists?limit=50`;
   return await fetchData<UserPlaylistsType>(url, accessToken);
 }
+// https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists
 
 export async function getPlaylistById(
   accessToken: accessTokenType,
   playlistId: string,
-): Promise<PlaylistItemsType | ApiError> {
+): Promise<PlaylistItemsType> {
   const url = `https://api.spotify.com/v1/playlists/${playlistId}/tracks?limit=5`;
   // await new Promise((resolve) => setTimeout(resolve, 2000)); - to check suspense (not implemented yet)
   return await fetchData<PlaylistItemsType>(url, accessToken);
 }
+// https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
 
 // i recommend checking out "@/lib/types.tsx" to understand what each function returns
