@@ -208,10 +208,18 @@ export type PlaylistItemsType = {
   }>;
 };
 
-export type ApiError = {
+export class ApiError extends Error {
   status: number;
-  message: string;
-};
+
+  constructor(status: number, message: string) {
+    if (typeof status !== "number" || typeof message !== "string") {
+      throw new TypeError("Invalid parameters for ApiError");
+    }
+    super(message);
+    this.status = status;
+    Object.setPrototypeOf(this, ApiError.prototype);
+  }
+}
 
 // all the types i created above are made using the spotify docs
 // https://developer.spotify.com/documentation/web-api
