@@ -34,9 +34,17 @@ async function fetchData<T>(
     return data;
   } catch (error) {
     if (error instanceof ApiError) {
-      throw error; // Re-throw ApiError as is
+      throw error; // re-throw ApiError as is
     }
-    throw new ApiError(500, "An unexpected error occurred");
+
+    if (error instanceof Error) {
+      if (error.message === "fetch failed") {
+        throw new ApiError(500, "Unable to retrieve data.");
+      }
+      // for people with no internet connection.
+      throw new ApiError(500, error.message);
+    }
+    throw new ApiError(500, "An unexpected error occurred.");
   }
 }
 // generic function that can be used to fetch most of the endpoints in spotify api
