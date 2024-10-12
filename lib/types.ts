@@ -209,27 +209,25 @@ export type PlaylistItemsType = {
 };
 
 export class ApiError extends Error {
-  status: number;
-
   constructor(status: number, message: string) {
-    if (typeof status !== "number" || typeof message !== "string") {
-      throw new TypeError("Invalid parameters for ApiError");
-    }
-    super(message);
-    this.status = status;
-    Object.setPrototypeOf(this, ApiError.prototype);
+    super(`${status}|s:m|${message}`);
+    this.name = "ApiError";
   }
 }
+/* 
+  (*)
 
-// all the types i created above are made using the spotify docs
-// https://developer.spotify.com/documentation/web-api
+    The syntax |s:m| is used to split the status from the message. It's just a notation to help
+    distinguish an ApiError from a normal error only with the message string of the error.
 
-/*
-    implementing type-safety was hell, please if you ever 
-    start a project by yourself implement it as you go 
-    so you don't have to go through this 
+    For example: As the error gets passed to the error.tsx file it loses the ApiError type and
+    the status propriety - due to serialization.
+
+  (*)
 */
-
 export type SearchParamsType = { [key: string]: string | string[] | undefined };
 
 export type playlistDataType = { name: string; id: string; image: string };
+
+// all the types i created above are made using the spotify docs
+// https://developer.spotify.com/documentation/web-api
