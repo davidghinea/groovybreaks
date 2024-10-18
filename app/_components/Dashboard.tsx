@@ -20,10 +20,6 @@ export default async function Dashboard({
   const accessToken = session?.user?.accessToken ?? null;
   const fetchPlaylists = (await getUserPlaylists(accessToken)) ?? null;
 
-  if ("status" in fetchPlaylists) {
-    throw new Error(`Failed to fetch playlists: ${fetchPlaylists.message}`);
-  }
-
   const selectedPlaylistId = searchParams?.id ?? null; // gets the id of the selected playlist from the combobox using the search params
 
   const playlistData: playlistDataType[] = [];
