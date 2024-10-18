@@ -21,10 +21,27 @@ async function fetchData<T>(
     if (!response.ok) {
       const errorResponse = await response.json();
       if (errorResponse.error) {
-        throw new ApiError(
-          errorResponse.error.status,
-          errorResponse.error.message,
-        );
+        if (errorResponse.error.status === 401) {
+          throw new ApiError(
+            errorResponse.error.status,
+            "Your session has expired. Please log in again.",
+          );
+        } else if (errorResponse.error.status === 429) {
+          throw new ApiError(
+            errorResponse.error.status,
+            "Too many people are using the app. Please try again later.",
+          );
+        } else if (errorResponse.error.status === 403)
+          throw new ApiError(
+            errorResponse.error.status,
+            "You encountered a server exception.Please contact owners.",
+          );
+        else {
+          throw new ApiError(
+            errorResponse.error.status,
+            errorResponse.error.message,
+          );
+        }
       } else {
         throw new ApiError(response.status, `An unexpected error occurred.`);
       }
@@ -39,7 +56,10 @@ async function fetchData<T>(
 
     if (error instanceof Error) {
       if (error.message === "fetch failed") {
-        throw new ApiError(500, "Unable to retrieve data.");
+        throw new ApiError(
+          500,
+          "Unable to retrieve data. Try checking your internet connection.",
+        );
       }
       // for people with no internet connection.
       throw new ApiError(500, error.message);
