@@ -52,7 +52,4 @@ export default function HomeHeader(): JSX.Element {
   );
 }
 
-// Hamburger menu is unfunctional atm - TO DO
 // https://ui.shadcn.com/docs/components/sheet
-
-//I have a Cambridge C2 English Proficiency certificate
