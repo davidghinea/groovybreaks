@@ -3,6 +3,8 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import { ThemeProvider } from "@/components/theme-provider";
 import HomeHeader from "./_components/HomeHeader";
+import { getServerSession } from "next-auth";
+import { options } from "@/app/api/auth/[...nextauth]/options";
 
 const font = Outfit({ subsets: ["latin"] });
 
@@ -12,11 +14,12 @@ export const metadata: Metadata = {
     "Stream a handpicked selection of music during your study breaks.",
 };
 
-export default function RootLayout({
+export default async function RootLayout({
   children,
 }: Readonly<{
   children: React.ReactNode;
-}>): JSX.Element {
+}>) {
+  const session = await getServerSession(options);
   return (
     <html lang="en" suppressHydrationWarning>
       <body className={font.className}>
@@ -26,7 +29,12 @@ export default function RootLayout({
           enableSystem
           disableTransitionOnChange
         >
-          <HomeHeader />
+          <HomeHeader
+            name={session?.user?.name}
+            image={session?.user?.image}
+            email={session?.user?.email}
+          />
+          {/* Passing session details to Header for the User Profile Card */}
           {children}
         </ThemeProvider>
       </body>
