@@ -3,7 +3,7 @@ import { Button } from "@/components/ui/button";
 import creativeImage from "@/public/illustrations/whyIllustration.svg";
 
 import Link from "next/link";
-import { ArrowRight } from "lucide-react";
+import { ArrowRight, Clock } from "lucide-react";
 
 import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
@@ -20,7 +20,7 @@ export default async function HomePage(): Promise<JSX.Element> {
   const session = await getServerSession(options);
   return (
     <>
-      <section className="mb-12 flex min-h-[650px] w-[100dvw] flex-col items-center justify-center md:h-[85dvh] md:min-h-[500px] md:flex-row">
+      <section className="mb-12 flex min-h-[650px] w-[100dvw] flex-col items-center justify-center md:mb-0 md:h-[85dvh] md:min-h-[500px] md:flex-row">
         <Image
           src={creativeImage}
           alt="creative"
@@ -103,13 +103,16 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
           <Separator orientation="vertical" />
           <div className="w-full space-y-6 p-8">
-            <div className="flex flex-col items-start gap-6">
-              <h2 className="text-left text-5xl font-bold tracking-tight text-foreground">
+            <div className="flex flex-col items-start">
+              <h1 className="mb-3 text-left text-5xl font-bold tracking-tight text-foreground">
                 Let's Get Your{" "}
                 <span className="text-primary">Music Playing</span>.
-              </h2>
-
-              <p className="max-w-[600px] text-left text-base text-muted-foreground">
+              </h1>
+              <p className="mb-6 text-left text-sm text-muted-foreground">
+                <Clock size={16} className="inline-block align-text-bottom" /> 5
+                min
+              </p>
+              <p className="max-w-[600px] pb-6 text-left text-base text-muted-foreground">
                 To get started, you'll need a{" "}
                 <span className="text-primary">Spotify Premium</span> account
                 and a
@@ -151,14 +154,14 @@ export default async function HomePage(): Promise<JSX.Element> {
         <div className="w-full max-w-[400px] text-right md:max-w-[814px]">
           <p className="mt-2 text-xs text-muted-foreground">
             The illustrations used in this project are provided by{" "}
-            <a
+            <Link
               href="https://www.streamlinehq.com/illustrations"
               className="text-primary underline"
               target="_blank"
               rel="noopener noreferrer"
             >
               Streamline
-            </a>
+            </Link>
             .
           </p>
         </div>
