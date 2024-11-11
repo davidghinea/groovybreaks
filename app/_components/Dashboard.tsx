@@ -3,6 +3,7 @@
 import React from "react";
 import { getUserPlaylists } from "@/lib/userFunctions";
 import { Session } from "next-auth";
+import SubmitPlaylist from "./SubmitPlaylist";
 
 import Combobox from "./PlaylistCombobox";
 import { SearchParamsType } from "@/lib/types";
@@ -38,7 +39,16 @@ export default async function Dashboard({
       accessToken &&
       typeof accessToken === "string" &&
       typeof selectedPlaylistId === "string" ? (
-        <Playlist playlistId={selectedPlaylistId} accessToken={accessToken} />
+        <>
+          <Playlist playlistId={selectedPlaylistId} accessToken={accessToken} />
+          <SubmitPlaylist
+            playlistName={
+              playlistData.find(
+                (playlist) => playlist.id === selectedPlaylistId,
+              )?.name ?? ""
+            }
+          />
+        </>
       ) : (
         <h1 className="mt-4">Select a playlist</h1>
       )}

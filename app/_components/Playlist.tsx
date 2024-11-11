@@ -20,12 +20,6 @@ import PlayButton from "./PlayButton";
 
 import Image from "next/image";
 
-function isPlaylistItemsType(
-  data: PlaylistItemsType | ApiError,
-): data is PlaylistItemsType {
-  return (data as PlaylistItemsType).items !== undefined;
-}
-
 export default async function Playlist({
   playlistId,
   accessToken,
@@ -36,7 +30,7 @@ export default async function Playlist({
   const playlistData = await getPlaylistById(accessToken, playlistId);
   return (
     <Table className="mt-8">
-      <TableCaption>Load more...</TableCaption>
+      {/* <TableCaption className="mb-8 mt-1">Load more...</TableCaption> */}
       {/* not functional yet */}
       <TableHeader>
         <TableRow>
