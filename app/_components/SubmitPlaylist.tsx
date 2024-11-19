@@ -10,7 +10,13 @@ import {
 } from "@/components/ui/dialog";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { ArrowUpRight, Clock, TimerOff, Timer } from "lucide-react";
+import {
+  ArrowUpRight,
+  Clock,
+  TimerOff,
+  Timer,
+  ListOrdered,
+} from "lucide-react";
 import { useState } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
@@ -24,10 +30,11 @@ export default function SubmitPlaylist({
   const [startTime, setStartTime] = useState("");
   const [classDuration, setClassDuration] = useState("");
   const [breakDuration, setBreakDuration] = useState("");
+  const [breakNumber, setBreakNumber] = useState("");
   const [open, setOpen] = useState(false);
 
   const handleSubmit = () => {
-    if (!startTime || !classDuration || !breakDuration) return;
+    if (!startTime || !classDuration || !breakDuration || !breakNumber) return;
 
     // create new URLSearchParams with existing parameters
     const newSearchParams = new URLSearchParams(searchParams.toString());
@@ -36,6 +43,7 @@ export default function SubmitPlaylist({
     newSearchParams.set("startTime", startTime);
     newSearchParams.set("classDuration", classDuration);
     newSearchParams.set("breakDuration", breakDuration);
+    newSearchParams.set("breakNumber", breakNumber);
 
     router.push(`/autoplay?${newSearchParams.toString()}`);
     setOpen(false);
@@ -131,6 +139,32 @@ export default function SubmitPlaylist({
                 )}
               </div>
             </div>
+            <div className="grid gap-2">
+              <Label htmlFor="breakNumber" className="flex items-center gap-2">
+                <ListOrdered className="size-4" />
+                Number of Breaks
+              </Label>
+              <div>
+                <Input
+                  id="breakNumber"
+                  type="number"
+                  min="1"
+                  value={breakNumber}
+                  onChange={(e) => {
+                    const value = parseInt(e.target.value);
+                    if (value > 0) {
+                      setBreakNumber(e.target.value);
+                    }
+                  }}
+                  className="col-span-3"
+                />
+                {parseInt(breakNumber) <= 0 && (
+                  <p className="mt-1 text-sm text-destructive">
+                    Please enter a valid number.
+                  </p>
+                )}
+              </div>
+            </div>
             <Button
               className="mt-2"
               onClick={handleSubmit}
@@ -138,8 +172,10 @@ export default function SubmitPlaylist({
                 !startTime ||
                 !classDuration ||
                 !breakDuration ||
+                !breakNumber ||
                 parseInt(classDuration) <= 0 ||
-                parseInt(breakDuration) <= 0
+                parseInt(breakDuration) <= 0 ||
+                parseInt(breakNumber) <= 0
               }
             >
               Save Schedule
