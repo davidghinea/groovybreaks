@@ -25,11 +25,13 @@ export default async function Dashboard({
 
   const playlistData: playlistDataType[] = [];
   fetchPlaylists.items.forEach((playlist: UserPlaylistType) => {
-    playlistData.push({
-      name: playlist.name,
-      id: playlist.id,
-      image: playlist.images?.[0]?.url ?? "", // to add a default playlist image in the public to access here
-    });
+    if (playlist && playlist.name && playlist.id && playlist.images) {
+      playlistData.push({
+        name: playlist.name,
+        id: playlist.id,
+        image: playlist.images[0]?.url ?? "", // to add a default playlist image in the public to access here
+      });
+    } // I don't know what spotify did, but now official playlists made by them will not show up in the application.
   });
 
   return (
