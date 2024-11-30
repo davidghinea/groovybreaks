@@ -1,8 +1,12 @@
-"use client";
+"use server";
 
-import { useEffect, useState } from "react";
+import { getDevices } from "@/lib/userFunctions";
+import { getServerSession } from "next-auth";
+import BreakVerifier from "../_components/BreakVerifier";
+import { options } from "../api/auth/[...nextauth]/options";
+import DeviceSelector from "../_components/DeviceSelector";
 
-export default function Autoplay({
+export default async function Autoplay({
   searchParams,
 }: {
   searchParams: { [key: string]: string | string[] | undefined };
@@ -56,55 +60,9 @@ export default function Autoplay({
     );
   }
 
-  // Calculate break times
-  const calculateNextBreaks = () => {
-    const [hours, minutes] = startTime.split(":").map(Number);
-    let currentTime = new Date();
-    currentTime.setHours(hours, minutes, 0, 0);
-
-    const breaks = [];
-    // Calculate the specified number of breaks
-    for (let i = 0; i < breakNumber; i++) {
-      // Add class duration to get break start
-      let breakStart = new Date(currentTime.getTime() + classDuration * 60000);
-      // Add break duration to get break end
-      let breakEnd = new Date(breakStart.getTime() + breakDuration * 60000);
-
-      breaks.push({
-        breakStart: `${String(breakStart.getHours()).padStart(2, "0")}:${String(breakStart.getMinutes()).padStart(2, "0")}`,
-        breakEnd: `${String(breakEnd.getHours()).padStart(2, "0")}:${String(breakEnd.getMinutes()).padStart(2, "0")}`,
-      });
-
-      // Set current time to break end to calculate next period
-      currentTime = new Date(breakEnd.getTime());
-    }
-    return breaks;
-  };
-
-  const breaks = calculateNextBreaks();
-  const [loggedBreaks, setLoggedBreaks] = useState(new Set());
-
-  // Set up an interval to check the current time against breakStart times
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const now = new Date();
-      const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
-
-      breaks.forEach((breakTime) => {
-        if (
-          currentTime === breakTime.breakStart &&
-          !loggedBreaks.has(breakTime.breakStart)
-        ) {
-          console.log(
-            `It's time for a break! Break starts at ${breakTime.breakStart}`,
-          );
-          setLoggedBreaks((prev) => new Set(prev).add(breakTime.breakStart));
-        }
-      });
-    }, 1000); // Check every second
-
-    return () => clearInterval(interval); // Clean up the interval on component unmount
-  }, [breaks, loggedBreaks]);
+  const session = await getServerSession(options);
+  const accessToken = session?.user?.accessToken ?? null;
+  const availableDevices = await getDevices(accessToken);
 
   return (
     <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
@@ -114,18 +72,22 @@ export default function Autoplay({
         <p>Class Duration: {classDuration} minutes</p>
         <p>Break Duration: {breakDuration} minutes</p>
         <p>Number of Breaks: {breakNumber}</p>
-
-        <div className="mt-4">
-          <div className="font-semibold">Upcoming Breaks:</div>
-          {breaks.map((breakTime, index) => (
-            <div key={index} className="mt-2">
-              <p>Break {index + 1}:</p>
-              <p>Starts: {breakTime.breakStart}</p>
-              <p>Ends: {breakTime.breakEnd}</p>
-            </div>
-          ))}
-        </div>
       </div>
+      <BreakVerifier
+        startTime={startTime}
+        classDuration={classDuration}
+        breakDuration={breakDuration}
+        breakNumber={breakNumber}
+        id={playlistId}
+      />
+      {availableDevices.devices.length > 0 ? (
+        <DeviceSelector availableDevices={availableDevices} />
+      ) : (
+        <h1>
+          No playback devices were found. Please ensure that the device you wish
+          to use as your speaker has Spotify running.
+        </h1>
+      )}
     </div>
   );
 }
