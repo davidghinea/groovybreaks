@@ -208,13 +208,26 @@ export type PlaylistItemsType = {
   }>;
 };
 
+export type AvailableDevices = {
+  devices: Array<{
+    id: string | null;
+    is_active: boolean;
+    is_private_session: boolean;
+    is_restricted: boolean;
+    name: string;
+    type: string;
+    volume_percent: number | null;
+    supports_volume: boolean;
+  }>;
+};
+
 export class ApiError extends Error {
   constructor(status: number, message: string) {
     super(`${status}|s:m|${message}`);
     this.name = "ApiError";
   }
 }
-/* 
+/*
   (*)
 
     The syntax |s:m| is used to split the status from the message. It's just a notation to help

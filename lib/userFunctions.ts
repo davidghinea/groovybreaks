@@ -4,6 +4,7 @@ import {
   UserPlaylistsType,
   ApiError,
   PlaylistItemsType,
+  AvailableDevices,
 } from "@/lib/types";
 
 async function fetchData<T>(
@@ -97,5 +98,12 @@ export async function getPlaylistById(
   return await fetchData<PlaylistItemsType>(url, accessToken);
 }
 // https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
+
+export async function getDevices(
+  accessToken: accessTokenType,
+): Promise<AvailableDevices> {
+  const url = "https://api.spotify.com/v1/me/player/devices";
+  return await fetchData<AvailableDevices>(url, accessToken);
+}
 
 // i recommend checking out "@/lib/types.tsx" to understand what each function returns
