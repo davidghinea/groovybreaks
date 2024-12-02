@@ -2,8 +2,6 @@
 
 import { getPlaylistById } from "@/lib/userFunctions";
 
-import { CircleOffIcon } from "lucide-react";
-
 import {
   Table,
   TableBody,
@@ -12,8 +10,6 @@ import {
   TableHeader,
   TableRow,
 } from "@/components/ui/table";
-
-import PlayButton from "./PlayButton";
 
 import Image from "next/image";
 
@@ -46,15 +42,6 @@ export default async function Playlist({
               <TableRow key={item.track!.id}>
                 <TableCell>
                   <div className="relative flex h-[56px] w-[56px] items-center justify-center">
-                    <div className="absolute z-10 flex h-full w-full items-center justify-center opacity-0 transition-opacity duration-300 hover:bg-black hover:bg-opacity-50 hover:opacity-100">
-                      {typeof item.track!.preview_url === "string" &&
-                      item.track!.preview_url ? (
-                        <PlayButton previewurl={item.track!.preview_url} />
-                      ) : (
-                        <CircleOffIcon className="cursor-not-allowed" />
-                      )}
-                      {/* I need to remove this because it's deprecated :( */}
-                    </div>
                     <Image
                       src={item.track!.album.images[0].url}
                       alt="playlist img"
