@@ -35,7 +35,7 @@ async function fetchData<T>(
         } else if (errorResponse.error.status === 403)
           throw new ApiError(
             errorResponse.error.status,
-            "You encountered a server exception.Please contact owners.",
+            "You encountered a server exception. Please contact owners.",
           );
         else {
           throw new ApiError(
@@ -105,5 +105,6 @@ export async function getDevices(
   const url = "https://api.spotify.com/v1/me/player/devices";
   return await fetchData<AvailableDevices>(url, accessToken);
 }
+// https://developer.spotify.com/documentation/web-api/reference/get-a-users-available-devices
 
 // i recommend checking out "@/lib/types.tsx" to understand what each function returns

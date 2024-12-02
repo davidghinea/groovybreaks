@@ -5,11 +5,12 @@ import { getServerSession } from "next-auth";
 import BreakVerifier from "../_components/BreakVerifier";
 import { options } from "../api/auth/[...nextauth]/options";
 import DeviceSelector from "../_components/DeviceSelector";
+import { SearchParamsType } from "@/lib/types";
 
 export default async function Autoplay({
   searchParams,
 }: {
-  searchParams: { [key: string]: string | string[] | undefined };
+  searchParams: SearchParamsType;
 }) {
   // validate required params exist
   if (
@@ -33,19 +34,27 @@ export default async function Autoplay({
   const playlistId = searchParams.id as string;
 
   // validate numeric values
-  if (
-    isNaN(classDuration) ||
-    isNaN(breakDuration) ||
-    isNaN(breakNumber) ||
-    classDuration <= 0 ||
-    breakDuration <= 0 ||
-    breakNumber <= 0
-  ) {
+
+  if (isNaN(classDuration) || classDuration <= 0) {
     return (
       <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
-        <p className="text-destructive">
-          Invalid duration or break number values
-        </p>
+        <p className="text-destructive">Invalid class duration value</p>
+      </div>
+    );
+  }
+
+  if (isNaN(breakDuration) || breakDuration <= 0) {
+    return (
+      <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
+        <p className="text-destructive">Invalid break duration value</p>
+      </div>
+    );
+  }
+
+  if (isNaN(breakNumber) || breakNumber <= 0) {
+    return (
+      <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
+        <p className="text-destructive">Invalid break number value</p>
       </div>
     );
   }
@@ -59,6 +68,8 @@ export default async function Autoplay({
       </div>
     );
   }
+
+  // TO DO: make a separate component for these text-destructive errors, to display a better-styled page. Also improve messages so they are user friendly.
 
   const session = await getServerSession(options);
   const accessToken = session?.user?.accessToken ?? null;
@@ -80,7 +91,7 @@ export default async function Autoplay({
         breakNumber={breakNumber}
         id={playlistId}
       />
-      {availableDevices.devices.length > 0 ? (
+      {availableDevices.devices.length > 0 && availableDevices ? (
         <DeviceSelector availableDevices={availableDevices} />
       ) : (
         <h1>

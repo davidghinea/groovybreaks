@@ -2,14 +2,11 @@
 
 import { getPlaylistById } from "@/lib/userFunctions";
 
-import { PlaylistItemsType, ApiError } from "@/lib/types";
-
 import { CircleOffIcon } from "lucide-react";
 
 import {
   Table,
   TableBody,
-  TableCaption,
   TableCell,
   TableHead,
   TableHeader,
@@ -56,6 +53,7 @@ export default async function Playlist({
                       ) : (
                         <CircleOffIcon className="cursor-not-allowed" />
                       )}
+                      {/* I need to remove this because it's deprecated :( */}
                     </div>
                     <Image
                       src={item.track!.album.images[0].url}

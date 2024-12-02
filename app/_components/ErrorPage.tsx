@@ -1,3 +1,5 @@
+"use client";
+
 import React from "react";
 
 import errorImage from "@/public/illustrations/error.svg";

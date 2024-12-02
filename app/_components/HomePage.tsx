@@ -1,3 +1,5 @@
+"use server";
+
 import Image from "next/image";
 import { Button } from "@/components/ui/button";
 import creativeImage from "@/public/illustrations/whyIllustration.svg";
