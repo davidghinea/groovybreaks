@@ -8,13 +8,47 @@ export default function BreakVerifier({
   breakDuration,
   breakNumber,
   id,
+  deviceId,
 }: {
   startTime: string;
   classDuration: number;
   breakDuration: number;
   breakNumber: number;
   id: string;
+  deviceId: string;
 }) {
+  async function GenerateAndPlay(
+    playlistId: string,
+    offsetPosition: number,
+    positionMs: number,
+    deviceId: string,
+  ): Promise<void> {
+    await fetch("/api/playTrack", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        playlistId,
+        offsetPosition,
+        positionMs,
+        deviceId,
+      }),
+    });
+    // fetch my own api, pass it the necessary fields in the body and it will generate the accesstoken within the api route
+    // view the api route for more details
+  }
+
+  async function GenerateAndPause(): Promise<void> {
+    await fetch("/api/pauseTrack", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+    });
+    // fetch my own api, where it generates the accesstoken within the api route
+    // view the api route for more details
+  }
   // Calculate break times
   const calculateNextBreaks = () => {
     const [hours, minutes] = startTime.split(":").map(Number);
@@ -54,10 +88,21 @@ export default function BreakVerifier({
           currentTime === breakTime.breakStart &&
           !loggedBreaks.has(breakTime.breakStart)
         ) {
-          console.log(
-            `It's time for a break! Break starts at ${breakTime.breakStart}`,
-          );
+          GenerateAndPlay(id, 0, 0, deviceId);
+          // view function for more details
           setLoggedBreaks((prev) => new Set(prev).add(breakTime.breakStart));
+        }
+        if (
+          currentTime === breakTime.breakEnd &&
+          loggedBreaks.has(breakTime.breakStart)
+        ) {
+          GenerateAndPause();
+          // view function for more details
+          setLoggedBreaks((prev) => {
+            const updated = new Set(prev);
+            updated.delete(breakTime.breakStart);
+            return updated;
+          });
         }
       });
     }, 1000); // Check every second

@@ -32,6 +32,7 @@ export default async function Autoplay({
   const breakDuration = parseInt(searchParams.breakDuration as string);
   const breakNumber = parseInt(searchParams.breakNumber as string);
   const playlistId = searchParams.id as string;
+  const deviceId = searchParams.deviceId as string;
 
   // validate numeric values
 
@@ -77,19 +78,20 @@ export default async function Autoplay({
 
   return (
     <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
-      <div className="flex flex-col items-center justify-center gap-4">
+      {/* <div className="flex flex-col items-center justify-center gap-4">
         <div className="text-xl font-bold">Class Schedule</div>
         <p>Start Time: {startTime}</p>
         <p>Class Duration: {classDuration} minutes</p>
         <p>Break Duration: {breakDuration} minutes</p>
         <p>Number of Breaks: {breakNumber}</p>
-      </div>
+      </div> */}
       <BreakVerifier
         startTime={startTime}
         classDuration={classDuration}
         breakDuration={breakDuration}
         breakNumber={breakNumber}
         id={playlistId}
+        deviceId={deviceId}
       />
       {availableDevices.devices.length > 0 && availableDevices ? (
         <DeviceSelector availableDevices={availableDevices} />
