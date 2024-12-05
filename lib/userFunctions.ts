@@ -1,3 +1,5 @@
+"use server";
+
 import {
   accessTokenType,
   UserDataType,
@@ -110,7 +112,7 @@ export async function getDevices(
 async function updateData<T>(
   url: string,
   accessToken: accessTokenType,
-  body: Record<string, any>,
+  body: Record<string, any> | null,
 ): Promise<T | Response> {
   // updated return type to include Response
   try {
@@ -120,10 +122,10 @@ async function updateData<T>(
         Authorization: `Bearer ${accessToken}`,
         "Content-Type": "application/json",
       },
-      body: JSON.stringify(body),
+      body: body ? JSON.stringify(body) : undefined,
     });
 
-    if (response.status === 204) {
+    if (response.ok) {
       return response; // return the response if status is 204 - otherwise you will get a 500 although the music starts
     }
 
@@ -196,10 +198,19 @@ export async function playTrack(
   await updateData<void>(url, accessToken, body);
 }
 
+export async function resumeTrack(
+  accessToken: accessTokenType,
+  deviceId: number,
+): Promise<void> {
+  const url = `https://api.spotify.com/v1/me/player/play?device_id=${deviceId}`;
+
+  await updateData<void>(url, accessToken, null);
+}
+
 export async function pauseTrack(accessToken: accessTokenType): Promise<void> {
   const url = "https://api.spotify.com/v1/me/player/pause";
 
-  await updateData<void>(url, accessToken, {});
+  await updateData<void>(url, accessToken, null);
 }
 
 // i recommend checking out "@/lib/types.tsx" to understand what each function returns

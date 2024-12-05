@@ -49,6 +49,18 @@ export default function BreakVerifier({
     // fetch my own api, where it generates the accesstoken within the api route
     // view the api route for more details
   }
+
+  async function GenerateAndResume(deviceId: string): Promise<void> {
+    await fetch("/api/resumeTrack", {
+      method: "PUT",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify({
+        deviceId,
+      }),
+    });
+  }
   // Calculate break times
   const calculateNextBreaks = () => {
     const [hours, minutes] = startTime.split(":").map(Number);
@@ -83,13 +95,16 @@ export default function BreakVerifier({
       const now = new Date();
       const currentTime = `${String(now.getHours()).padStart(2, "0")}:${String(now.getMinutes()).padStart(2, "0")}`;
 
-      breaks.forEach((breakTime) => {
+      breaks.forEach((breakTime, index) => {
         if (
           currentTime === breakTime.breakStart &&
           !loggedBreaks.has(breakTime.breakStart)
         ) {
-          GenerateAndPlay(id, 0, 0, deviceId);
-          // view function for more details
+          if (index === 0) {
+            GenerateAndPlay(id, 0, 0, deviceId);
+          } else {
+            GenerateAndResume(deviceId);
+          }
           setLoggedBreaks((prev) => new Set(prev).add(breakTime.breakStart));
         }
         if (
@@ -97,7 +112,6 @@ export default function BreakVerifier({
           loggedBreaks.has(breakTime.breakStart)
         ) {
           GenerateAndPause();
-          // view function for more details
           setLoggedBreaks((prev) => {
             const updated = new Set(prev);
             updated.delete(breakTime.breakStart);
