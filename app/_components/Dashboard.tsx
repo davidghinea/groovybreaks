@@ -2,6 +2,7 @@
 
 import React from "react";
 import { getUserPlaylists } from "@/lib/userFunctions";
+import { getUserData } from "@/lib/userFunctions";
 import { Session } from "next-auth";
 import SubmitPlaylist from "./SubmitPlaylist";
 
@@ -19,6 +20,7 @@ export default async function Dashboard({
 }): Promise<JSX.Element> {
   // added searchParams here which gets passed down from the page
   const accessToken = session?.user?.accessToken ?? null;
+  const user = await getUserData(accessToken);
   const fetchPlaylists = (await getUserPlaylists(accessToken)) ?? null;
 
   const selectedPlaylistId = searchParams?.id ?? null; // gets the id of the selected playlist from the combobox using the search params
@@ -49,6 +51,7 @@ export default async function Dashboard({
                 (playlist) => playlist.id === selectedPlaylistId,
               )?.name ?? ""
             }
+            product={user.product}
           />
         </>
       ) : (

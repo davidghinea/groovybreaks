@@ -5,6 +5,7 @@ import { ThemeProvider } from "@/components/theme-provider";
 import HomeHeader from "./_components/HomeHeader";
 import { getServerSession } from "next-auth";
 import { options } from "@/app/api/auth/[...nextauth]/options";
+import { Toaster } from "@/components/ui/toaster";
 
 const font = Outfit({ subsets: ["latin"] });
 
@@ -35,6 +36,7 @@ export default async function RootLayout({
             email={session?.user?.email}
           />
           {/* Passing session details to Header for the User Profile Card */}
+          <Toaster />
           {children}
         </ThemeProvider>
       </body>
