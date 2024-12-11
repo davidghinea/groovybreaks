@@ -23,12 +23,11 @@ import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
-  DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 
-import { LogOut, User, Settings, HelpCircle } from "lucide-react";
+import { LogOut, FileText, HelpCircle } from "lucide-react";
 import { signOut } from "next-auth/react";
 
 export default function HomeHeader({
@@ -119,13 +118,15 @@ export default function HomeHeader({
                     <DropdownMenuSeparator />
 
                     <DropdownMenuItem>
-                      <Settings className="mr-2 h-4 w-4" />
-                      <span>Settings</span>
-                    </DropdownMenuItem>
-                    <DropdownMenuItem>
                       <HelpCircle className="mr-2 h-4 w-4" />
                       <span>Help</span>
                     </DropdownMenuItem>
+                    <Link href="/policy">
+                      <DropdownMenuItem>
+                        <FileText className="mr-2 h-4 w-4" />{" "}
+                        <span>Terms & Privacy</span>
+                      </DropdownMenuItem>
+                    </Link>
                     <DropdownMenuSeparator />
                     <DropdownMenuItem onClick={() => signOut()}>
                       <LogOut className="mr-2 h-4 w-4" />
