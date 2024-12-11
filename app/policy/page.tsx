@@ -46,7 +46,7 @@ const PolicyPage = () => {
             </p>
           </div>
 
-          <Accordion type="single" className="space-y-4">
+          <Accordion type="multiple" className="space-y-4">
             <AccordionItem value="service">
               <AccordionTrigger className="hover:no-underline">
                 <div className="flex items-center gap-4">
