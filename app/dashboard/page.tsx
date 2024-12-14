@@ -15,10 +15,9 @@ export default async function page({
 }): Promise<JSX.Element> {
   const session = await getServerSession(options);
   // gets a modified session object which includes the accessToken => see the modification in ../api/auth/[...nextauth]/options.ts
+  if (!session?.user) {
+    return <NotAuth />;
+  }
 
-  return session?.user ? (
-    <Dashboard session={session} searchParams={searchParams} />
-  ) : (
-    <NotAuth />
-  );
+  return <Dashboard session={session} searchParams={searchParams} />;
 }

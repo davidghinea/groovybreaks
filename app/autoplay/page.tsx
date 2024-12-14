@@ -6,12 +6,20 @@ import BreakVerifier from "../_components/BreakVerifier";
 import { options } from "../api/auth/[...nextauth]/options";
 import DeviceSelector from "../_components/DeviceSelector";
 import { SearchParamsType } from "@/lib/types";
+import NotAuth from "../_components/NotAuth";
 
 export default async function Autoplay({
   searchParams,
 }: {
   searchParams: SearchParamsType;
 }) {
+  const session = await getServerSession(options);
+
+  // Check if the user is authenticated
+  if (!session?.user) {
+    return <NotAuth />;
+  }
+
   // validate required params exist
   if (
     !searchParams.startTime ||
@@ -72,7 +80,6 @@ export default async function Autoplay({
 
   // TO DO: make a separate component for these text-destructive errors, to display a better-styled page. Also improve messages so they are user friendly.
 
-  const session = await getServerSession(options);
   const accessToken = session?.user?.accessToken ?? null;
   const availableDevices = await getDevices(accessToken);
 
