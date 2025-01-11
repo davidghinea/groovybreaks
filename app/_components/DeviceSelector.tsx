@@ -45,7 +45,7 @@ const DeviceSelector = ({
 
   return (
     <Select onValueChange={handleSelect} value={selectedDeviceId}>
-      <SelectTrigger className="w-[500px]">
+      <SelectTrigger className="mb-6 w-[calc(100%-64px)] sm:w-[calc(100%-100px)]">
         <SelectValue placeholder="Select Device" />
       </SelectTrigger>
       <SelectContent>
@@ -54,11 +54,7 @@ const DeviceSelector = ({
           {availableDevices.devices
             .filter((device) => device.id !== null)
             .map((device) => (
-              <SelectItem
-                key={device.id ?? ""}
-                value={device.id ?? ""}
-                className={device.is_active ? "bg-pink" : "bg-blue"}
-              >
+              <SelectItem key={device.id ?? ""} value={device.id ?? ""}>
                 {device.name}
               </SelectItem>
             ))}

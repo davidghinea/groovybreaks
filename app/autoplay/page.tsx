@@ -30,7 +30,9 @@ export default async function Autoplay({
   ) {
     return (
       <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
-        <p className="text-destructive">Missing required parameters</p>
+        <p className="text-center text-destructive">
+          Missing required parameters
+        </p>
       </div>
     );
   }
@@ -47,7 +49,9 @@ export default async function Autoplay({
   if (isNaN(classDuration) || classDuration <= 0) {
     return (
       <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
-        <p className="text-destructive">Invalid class duration value</p>
+        <p className="text-center text-destructive">
+          Invalid class duration value
+        </p>
       </div>
     );
   }
@@ -55,7 +59,9 @@ export default async function Autoplay({
   if (isNaN(breakDuration) || breakDuration <= 0) {
     return (
       <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
-        <p className="text-destructive">Invalid break duration value</p>
+        <p className="text-center text-destructive">
+          Invalid break duration value
+        </p>
       </div>
     );
   }
@@ -63,7 +69,9 @@ export default async function Autoplay({
   if (isNaN(breakNumber) || breakNumber <= 0) {
     return (
       <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
-        <p className="text-destructive">Invalid break number value</p>
+        <p className="text-center text-destructive">
+          Invalid break number value
+        </p>
       </div>
     );
   }
@@ -73,7 +81,9 @@ export default async function Autoplay({
   if (!timeRegex.test(startTime)) {
     return (
       <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
-        <p className="text-destructive">Invalid start time format</p>
+        <p className="text-center text-destructive">
+          Invalid start time format
+        </p>
       </div>
     );
   }
@@ -84,30 +94,25 @@ export default async function Autoplay({
   const availableDevices = await getDevices(accessToken);
 
   return (
-    <div className="flex h-[100dvh] w-[100dvw] items-center justify-center">
-      {/* <div className="flex flex-col items-center justify-center gap-4">
-        <div className="text-xl font-bold">Class Schedule</div>
-        <p>Start Time: {startTime}</p>
-        <p>Class Duration: {classDuration} minutes</p>
-        <p>Break Duration: {breakDuration} minutes</p>
-        <p>Number of Breaks: {breakNumber}</p>
-      </div> */}
-      <BreakVerifier
-        startTime={startTime}
-        classDuration={classDuration}
-        breakDuration={breakDuration}
-        breakNumber={breakNumber}
-        id={playlistId}
-        deviceId={deviceId}
-      />
-      {availableDevices.devices.length > 0 && availableDevices ? (
-        <DeviceSelector availableDevices={availableDevices} />
-      ) : (
-        <h1>
-          No playback devices were found. Please ensure that the device you wish
-          to use as your speaker has Spotify running.
-        </h1>
-      )}
+    <div className="top-20 flex h-[100dvh] w-[100dvw] items-center justify-center overflow-hidden md:top-0">
+      <div className="flex flex-col items-center justify-center rounded-lg p-6 shadow-2xl md:p-4">
+        <BreakVerifier
+          startTime={startTime}
+          classDuration={classDuration}
+          breakDuration={breakDuration}
+          breakNumber={breakNumber}
+          id={playlistId}
+          deviceId={deviceId}
+        />
+        {availableDevices.devices.length > 0 && availableDevices ? (
+          <DeviceSelector availableDevices={availableDevices} />
+        ) : (
+          <h1 className="text-center">
+            No playback devices were found. Please ensure that the device you
+            wish to use as your speaker has Spotify running.
+          </h1>
+        )}
+      </div>
     </div>
   );
 }
