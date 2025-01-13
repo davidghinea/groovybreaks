@@ -7,6 +7,7 @@ import {
   ApiError,
   PlaylistItemsType,
   AvailableDevices,
+  PlaybackType,
 } from "@/lib/types";
 
 async function fetchData<T>(
@@ -108,6 +109,14 @@ export async function getDevices(
   return await fetchData<AvailableDevices>(url, accessToken);
 }
 // https://developer.spotify.com/documentation/web-api/reference/get-a-users-available-devices
+
+export async function getPlayback(
+  accessToken: accessTokenType,
+): Promise<PlaybackType> {
+  const url = "https://api.spotify.com/v1/me/player";
+  return await fetchData<PlaybackType>(url, accessToken);
+}
+// https://developer.spotify.com/documentation/web-api/reference/get-information-about-the-users-current-playback
 
 async function updateData<T>(
   url: string,

@@ -7,6 +7,7 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import { currentlyPlayingType } from "@/lib/types";
 
 export default function BreakVerifier({
   startTime,
@@ -23,6 +24,14 @@ export default function BreakVerifier({
   id: string;
   deviceId: string;
 }) {
+  const [currentlyPlaying, setCurrentlyPlaying] =
+    useState<currentlyPlayingType>({
+      progress_ms: 0,
+      albumImage: "https://via.placeholder.com/300", // placeholder image - to do: replace with custom image
+      artistName: "Unknown Artist",
+      duration_ms: 0,
+      trackName: "Unknown Track",
+    });
   async function GenerateAndPlay(
     playlistId: string,
     offsetPosition: number,
@@ -68,6 +77,27 @@ export default function BreakVerifier({
     });
   }
 
+  async function getPlayback() {
+    try {
+      const response = await fetch("/api/getPlayback", {
+        method: "GET",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+      setCurrentlyPlaying({
+        progress_ms: data.progress_ms,
+        albumImage: data.item.album.images[0].url,
+        artistName: data.item.album.artists[0].name,
+        duration_ms: data.item.duration_ms,
+        trackName: data.item.name,
+      });
+    } catch (error) {
+      console.error("Error fetching playback status:", error);
+      throw error;
+    }
+  }
   const calculateNextBreaks = () => {
     const [hours, minutes] = startTime.split(":").map(Number);
     let currentTime = new Date();
@@ -109,8 +139,10 @@ export default function BreakVerifier({
         ) {
           if (index === 0) {
             GenerateAndPlay(id, 0, 0, deviceId);
+            getPlayback();
           } else {
             GenerateAndResume(deviceId);
+            getPlayback();
           }
           setLoggedBreaks((prev) => new Set(prev).add(breakTime.breakStart));
         }
@@ -148,6 +180,16 @@ export default function BreakVerifier({
     return currentTime >= breakStart && currentTime <= breakEnd;
   });
 
+  useEffect(() => {
+    if (isBreakOngoing) {
+      const playbackInterval = setInterval(() => {
+        getPlayback();
+      }, 1000);
+
+      return () => clearInterval(playbackInterval);
+    }
+  }, [isBreakOngoing]);
+  // this seems unnecessary, but without it if someone changes the song within Spotify, we would not be able to tell.
   const nextBreak = breaks.find((breakTime) => {
     const [breakStartHours, breakStartMinutes] = breakTime.breakStart
       .split(":")
@@ -180,20 +222,49 @@ export default function BreakVerifier({
                     <>
                       <div className="relative h-20 w-20 overflow-hidden rounded-lg shadow-lg">
                         <Image
-                          src="https://upload.wikimedia.org/wikipedia/en/4/45/Skyfall_cover.png"
-                          alt="Skyfall by Adele"
+                          src={currentlyPlaying.albumImage}
+                          alt={currentlyPlaying.trackName}
                           layout="fill"
                           objectFit="cover"
                         />
                       </div>
                       <div className="flex flex-col">
-                        <p className="text-lg font-semibold">Skyfall</p>
-                        <p className="text-sm text-muted-foreground">Adele</p>
-                        <div className="mt-2 h-1 w-48 rounded-full bg-secondary">
+                        <p className="text-lg font-semibold">
+                          {currentlyPlaying.trackName}
+                        </p>
+                        <p className="text-sm text-muted-foreground">
+                          {currentlyPlaying.artistName}
+                        </p>
+                        <div className="mt-2 h-1 w-36 rounded-full bg-secondary">
                           <Progress
-                            value={50}
+                            value={
+                              currentlyPlaying.progress_ms
+                                ? (currentlyPlaying.progress_ms * 100) /
+                                  currentlyPlaying.duration_ms
+                                : 0
+                            }
                             className="h-1 rounded-full bg-primary"
                           />
+                        </div>
+                        <div className="mt-1 text-sm text-muted-foreground">
+                          {currentlyPlaying.progress_ms
+                            ? `${Math.floor(currentlyPlaying.progress_ms / 60000)}:${String(
+                                Math.floor(
+                                  (currentlyPlaying.progress_ms % 60000) / 1000,
+                                ),
+                              ).padStart(
+                                2,
+                                "0",
+                              )} / ${Math.floor(currentlyPlaying.duration_ms / 60000)}:${String(
+                                Math.floor(
+                                  (currentlyPlaying.duration_ms % 60000) / 1000,
+                                ),
+                              ).padStart(2, "0")}`
+                            : `- / ${Math.floor(currentlyPlaying.duration_ms / 60000)}:${String(
+                                Math.floor(
+                                  (currentlyPlaying.duration_ms % 60000) / 1000,
+                                ),
+                              ).padStart(2, "0")}`}
                         </div>
                       </div>
                     </>
@@ -212,7 +283,7 @@ export default function BreakVerifier({
             ) : nextBreak ? (
               <>
                 <h1 className="text-center text-2xl font-bold text-primary sm:text-3xl md:text-left">
-                  Waiting for Break...
+                  Waiting for Break
                 </h1>
                 <p className="text-center text-lg sm:text-xl md:text-left">
                   There's nothing more to do. Relax and wait for your upcoming
@@ -239,7 +310,7 @@ export default function BreakVerifier({
             ) : (
               <>
                 <h1 className="text-center text-2xl font-bold text-primary sm:text-3xl md:text-left">
-                  All done for today!
+                  All done for today
                 </h1>
                 <p className="text-center text-lg sm:text-xl md:text-left">
                   There are no more classes scheduled for today.
