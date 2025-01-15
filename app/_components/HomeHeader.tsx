@@ -77,7 +77,8 @@ export default function HomeHeader({
                       <Link
                         href={href}
                         className={`flex items-center rounded-md px-4 py-2 text-lg transition-colors hover:bg-accent ${
-                          pathname === href
+                          pathname === href ||
+                          (href === "/dashboard" && pathname === "/autoplay")
                             ? "font-medium text-foreground"
                             : "text-muted-foreground"
                         }`}
