@@ -3,6 +3,7 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 import BreakIllustration from "@/public/illustrations/whyIllustration.svg";
+import Disc from "@/public/icons/disc.svg";
 import { Button } from "@/components/ui/button";
 import { Calendar, Clock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
@@ -27,7 +28,7 @@ export default function BreakVerifier({
   const [currentlyPlaying, setCurrentlyPlaying] =
     useState<currentlyPlayingType>({
       progress_ms: 0,
-      albumImage: "https://via.placeholder.com/300", // placeholder image - to do: replace with custom image
+      albumImage: Disc, // placeholder image - to do: replace with custom image
       artistName: "Unknown Artist",
       duration_ms: 0,
       trackName: "Unknown Track",
@@ -223,7 +224,7 @@ export default function BreakVerifier({
                       <div className="relative h-20 w-20 overflow-hidden rounded-lg shadow-lg">
                         <Image
                           src={currentlyPlaying.albumImage}
-                          alt={currentlyPlaying.trackName}
+                          alt="Track Image"
                           layout="fill"
                           objectFit="cover"
                         />
