@@ -107,7 +107,7 @@ export default async function Autoplay({
         {availableDevices.devices.length > 0 && availableDevices ? (
           <DeviceSelector availableDevices={availableDevices} />
         ) : (
-          <h1 className="text-center">
+          <h1 className="max-w-[300px] pb-8 text-center md:max-w-[450px]">
             No playback devices were found. Please ensure that the device you
             wish to use as your speaker has Spotify running.
           </h1>

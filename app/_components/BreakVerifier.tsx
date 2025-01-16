@@ -8,6 +8,22 @@ import { Button } from "@/components/ui/button";
 import { Calendar, Clock } from "lucide-react";
 import { Progress } from "@/components/ui/progress";
 import { Skeleton } from "@/components/ui/skeleton";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogDescription,
+  DialogFooter,
+} from "@/components/ui/dialog";
 import { currentlyPlayingType } from "@/lib/types";
 
 export default function BreakVerifier({
@@ -25,10 +41,11 @@ export default function BreakVerifier({
   id: string;
   deviceId: string;
 }) {
+  const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [currentlyPlaying, setCurrentlyPlaying] =
     useState<currentlyPlayingType>({
       progress_ms: 0,
-      albumImage: Disc, // placeholder image - to do: replace with custom image
+      albumImage: Disc,
       artistName: "Unknown Artist",
       duration_ms: 0,
       trackName: "Unknown Track",
@@ -124,6 +141,7 @@ export default function BreakVerifier({
   };
 
   const breaks = calculateNextBreaks();
+
   const [loggedBreaks, setLoggedBreaks] = useState(new Set());
   const [currentTime, setCurrentTime] = useState(new Date());
 
@@ -219,66 +237,79 @@ export default function BreakVerifier({
                   Break Time!
                 </h1>
                 <div className="flex items-center space-x-4">
-                  {true ? (
-                    <>
-                      <div className="relative h-20 w-20 overflow-hidden rounded-lg shadow-lg">
-                        <Image
-                          src={currentlyPlaying.albumImage}
-                          alt="Track Image"
-                          layout="fill"
-                          objectFit="cover"
-                        />
-                      </div>
-                      <div className="flex flex-col">
-                        <p className="text-lg font-semibold">
-                          {currentlyPlaying.trackName}
-                        </p>
-                        <p className="text-sm text-muted-foreground">
-                          {currentlyPlaying.artistName}
-                        </p>
-                        <div className="mt-2 h-1 w-36 rounded-full bg-secondary">
-                          <Progress
-                            value={
-                              currentlyPlaying.progress_ms
-                                ? (currentlyPlaying.progress_ms * 100) /
-                                  currentlyPlaying.duration_ms
-                                : 0
-                            }
-                            className="h-1 rounded-full bg-primary"
-                          />
-                        </div>
-                        <div className="mt-1 text-sm text-muted-foreground">
-                          {currentlyPlaying.progress_ms
-                            ? `${Math.floor(currentlyPlaying.progress_ms / 60000)}:${String(
-                                Math.floor(
-                                  (currentlyPlaying.progress_ms % 60000) / 1000,
-                                ),
-                              ).padStart(
-                                2,
-                                "0",
-                              )} / ${Math.floor(currentlyPlaying.duration_ms / 60000)}:${String(
-                                Math.floor(
-                                  (currentlyPlaying.duration_ms % 60000) / 1000,
-                                ),
-                              ).padStart(2, "0")}`
-                            : `- / ${Math.floor(currentlyPlaying.duration_ms / 60000)}:${String(
-                                Math.floor(
-                                  (currentlyPlaying.duration_ms % 60000) / 1000,
-                                ),
-                              ).padStart(2, "0")}`}
-                        </div>
-                      </div>
-                    </>
-                  ) : (
-                    <>
-                      <Skeleton className="h-20 w-20" />
-                      <div className="flex flex-col">
-                        <Skeleton className="h-6 w-24" />
-                        <Skeleton className="mt-2 h-4 w-16" />
-                        <Skeleton className="mt-2 h-2 w-48 rounded-full" />
-                      </div>
-                    </>
-                  )}
+                  <>
+                    <div className="relative h-20 w-20 overflow-hidden rounded-lg shadow-lg">
+                      <Image
+                        src={currentlyPlaying.albumImage}
+                        alt="Track Image"
+                        layout="fill"
+                        objectFit="cover"
+                        className={
+                          currentlyPlaying.albumImage === Disc
+                            ? "animate-pulse"
+                            : ""
+                        }
+                      />
+                    </div>
+
+                    <div className="flex flex-col">
+                      {currentlyPlaying.trackName &&
+                      currentlyPlaying.artistName &&
+                      currentlyPlaying.progress_ms ? (
+                        <>
+                          <p className="text-lg font-semibold">
+                            {currentlyPlaying.trackName}
+                          </p>
+                          <p className="text-sm text-muted-foreground">
+                            {currentlyPlaying.artistName}
+                          </p>
+                          <div className="mt-2 h-1 w-36 rounded-full bg-secondary">
+                            <Progress
+                              value={
+                                currentlyPlaying.progress_ms
+                                  ? (currentlyPlaying.progress_ms * 100) /
+                                    currentlyPlaying.duration_ms
+                                  : 0
+                              }
+                              className="h-1 rounded-full bg-primary"
+                            />
+                          </div>
+                          <div className="mt-1 text-sm text-muted-foreground">
+                            {currentlyPlaying.progress_ms
+                              ? `${Math.floor(currentlyPlaying.progress_ms / 60000)}:${String(
+                                  Math.floor(
+                                    (currentlyPlaying.progress_ms % 60000) /
+                                      1000,
+                                  ),
+                                ).padStart(
+                                  2,
+                                  "0",
+                                )} / ${Math.floor(currentlyPlaying.duration_ms / 60000)}:${String(
+                                  Math.floor(
+                                    (currentlyPlaying.duration_ms % 60000) /
+                                      1000,
+                                  ),
+                                ).padStart(2, "0")}`
+                              : `- / ${Math.floor(currentlyPlaying.duration_ms / 60000)}:${String(
+                                  Math.floor(
+                                    (currentlyPlaying.duration_ms % 60000) /
+                                      1000,
+                                  ),
+                                ).padStart(2, "0")}`}
+                          </div>
+                        </>
+                      ) : (
+                        <>
+                          <Skeleton className="h-4 w-20" />
+                          <Skeleton className="mt-2 h-3 w-16" />
+                          <Skeleton className="mt-2 h-1 w-36" />
+                          <div className="mt-1 animate-pulse font-black text-muted">
+                            - / -
+                          </div>
+                        </>
+                      )}
+                    </div>
+                  </>
                 </div>
               </>
             ) : nextBreak ? (
@@ -322,9 +353,50 @@ export default function BreakVerifier({
               <Button
                 variant="outline"
                 className="w-full py-2 text-sm sm:py-3 sm:text-base"
+                onClick={() => setIsDialogOpen(true)}
               >
                 <Calendar className="mr-2 h-4 w-4" /> View Schedule
               </Button>
+              <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
+                <DialogContent className="min-w-[320px] sm:max-w-[425px]">
+                  <DialogHeader>
+                    <DialogTitle>Break Schedule</DialogTitle>
+                    <DialogDescription>
+                      Here are all the scheduled breaks for today.
+                    </DialogDescription>
+                  </DialogHeader>
+                  <div className="flex max-h-[60vh] justify-center overflow-auto px-1">
+                    <Table className="max-w-[350px]">
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead className="w-[100px]">Break</TableHead>
+                          <TableHead className="w-[100px]">
+                            Start Time
+                          </TableHead>
+                          <TableHead className="w-[100px]">End Time</TableHead>
+                        </TableRow>
+                      </TableHeader>
+                      <TableBody>
+                        {breaks.map((breakItem, index) => (
+                          <TableRow key={index}>
+                            <TableCell>Break {index + 1}</TableCell>
+                            <TableCell>{breakItem.breakStart}</TableCell>
+                            <TableCell>{breakItem.breakEnd}</TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
+                  <DialogFooter className="mt-4 items-center sm:justify-center">
+                    <Button
+                      className="w-[350px]"
+                      onClick={() => setIsDialogOpen(false)}
+                    >
+                      Close
+                    </Button>
+                  </DialogFooter>
+                </DialogContent>
+              </Dialog>
             </div>
           </div>
         </div>
