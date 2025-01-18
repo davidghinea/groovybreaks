@@ -82,6 +82,7 @@ export async function getUserData(
   return await fetchData<UserDataType>(url, accessToken);
 }
 // https://developer.spotify.com/documentation/web-api/reference/get-current-users-profile
+// user-read-private, user-read-email
 
 export async function getUserPlaylists(
   accessToken: accessTokenType,
@@ -91,6 +92,7 @@ export async function getUserPlaylists(
   return await fetchData<UserPlaylistsType>(url, accessToken);
 }
 // https://developer.spotify.com/documentation/web-api/reference/get-list-users-playlists
+// playlist-read-private, playlist-read-collaborative
 
 export async function getPlaylistById(
   accessToken: accessTokenType,
@@ -101,6 +103,7 @@ export async function getPlaylistById(
   return await fetchData<PlaylistItemsType>(url, accessToken);
 }
 // https://developer.spotify.com/documentation/web-api/reference/get-playlists-tracks
+// playlist-read-private
 
 export async function getDevices(
   accessToken: accessTokenType,
@@ -109,6 +112,7 @@ export async function getDevices(
   return await fetchData<AvailableDevices>(url, accessToken);
 }
 // https://developer.spotify.com/documentation/web-api/reference/get-a-users-available-devices
+// user-read-playback-state
 
 export async function getPlayback(
   accessToken: accessTokenType,
@@ -117,6 +121,7 @@ export async function getPlayback(
   return await fetchData<PlaybackType>(url, accessToken);
 }
 // https://developer.spotify.com/documentation/web-api/reference/get-information-about-the-users-current-playback
+// user-read-playback-state
 
 async function updateData<T>(
   url: string,
@@ -221,5 +226,7 @@ export async function pauseTrack(accessToken: accessTokenType): Promise<void> {
 
   await updateData<void>(url, accessToken, null);
 }
+// https://developer.spotify.com/documentation/web-api/reference/start-a-users-playback
+// user-modify-playback-state
 
 // i recommend checking out "@/lib/types.tsx" to understand what each function returns

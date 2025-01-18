@@ -21,11 +21,11 @@ export const options: NextAuthOptions = {
       clientId: process.env.SPOTIFY_CLIENT_ID as string,
       clientSecret: process.env.SPOTIFY_CLIENT_SECRET as string,
       authorization:
-        "https://accounts.spotify.com/authorize?response_type=code&scope=user-read-playback-state,user-modify-playback-state,user-read-currently-playing,streaming,playlist-read-private,playlist-read-collaborative,playlist-modify-private,playlist-modify-public,user-read-email,user-read-private",
+        "https://accounts.spotify.com/authorize?response_type=code&scope=user-read-playback-state,user-modify-playback-state,streaming,playlist-read-private,playlist-read-collaborative,user-read-email,user-read-private",
     }),
     // The scopes in the link give the app the permissions to view and modify the user's Spotify data.
-    // I selected most of the scopes, so they would allow me to do anything I want in the development process.
     // See docs here: https://developer.spotify.com/documentation/web-api/concepts/scopes
+    // The scopes used are listed in the lib/userFunctions.ts file.
   ],
   callbacks: {
     async jwt({ token, account }) {

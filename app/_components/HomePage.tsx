@@ -43,7 +43,7 @@ export default async function HomePage(): Promise<JSX.Element> {
             asChild
           >
             <Link href="/dashboard/auth">
-              {session?.user ? "View Dashboard" : "Log In"}
+              {session?.user ? "View Dashboard" : "Sign In"}
               <ArrowRight className="ml-4 size-4" />
             </Link>
           </Button>
@@ -149,7 +149,6 @@ export default async function HomePage(): Promise<JSX.Element> {
           </div>
         </div>
       </section>
-
       {/* here will be a step by step instruction on how to use the app with pictures when the project is finished */}
 
       <section className="mb-4 mt-24 flex w-[100dvw] justify-center">
